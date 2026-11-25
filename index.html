@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07152b" />
+  <title>SONIC: CHAOS ADVENTURE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="scene" aria-label="Mundo tridimensional do jogo"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Chaos Adventure"><span class="brand-mark">C</span><span>CHAOS<span class="brand-light"> ADVENTURE</span></span></a>
+      <div class="top-right"><span class="live-dot"></span><span id="region-label">GREEN HILL FRONTIER</span><button class="icon-btn" id="sound-btn" title="Som">♫</button><button class="icon-btn" id="pause-btn" title="Pausar">Ⅱ</button></div>
+    </header>
+
+    <section class="screen intro-screen" id="intro-screen">
+      <div class="intro-copy">
+        <div class="eyebrow"><span class="eyebrow-line"></span> UMA NOVA AVENTURA COMEÇA</div>
+        <h1>SONIC<span class="title-colon">:</span><br><span>CHAOS</span><br>ADVENTURE</h1>
+        <p>Explore um mundo em mudança. Enfrente os Badniks.<br>Encontre seu próprio caminho.</p>
+        <button class="primary-btn" id="start-btn"><span>COMEÇAR A JORNADA</span><b>↗</b></button>
+        <div class="edition-note"><span>◆</span> AVENTURA 3D • EDIÇÃO FAN GAME</div>
+      </div>
+      <div class="intro-stats"><div><b>03</b><span>BIOMAS</span></div><i></i><div><b>∞</b><span>POSSIBILIDADES</span></div></div>
+      <div class="hero-caption"><span>01 / 03</span><span>GREEN HILL FRONTIER</span></div>
+    </section>
+
+    <section class="screen creator-screen hidden" id="creator-screen">
+      <div class="panel creator-panel">
+        <div class="panel-head"><div><div class="eyebrow"><span class="eyebrow-line"></span> CONFIGURAÇÃO DO HERÓI</div><h2>CRIE SEU <em>PERSONAGEM</em></h2></div><button class="close-btn" id="creator-back">×</button></div>
+        <div class="creator-layout">
+          <div class="preview-card"><canvas id="preview-scene"></canvas><div class="preview-grid"></div><div class="preview-glow"></div><div class="preview-ring">✦</div><div class="preview-caption"><span>MODELO 3D</span><b id="preview-name">HEDGEHOG</b></div><div class="preview-tip">Arraste no cenário para girar</div></div>
+          <div class="custom-controls">
+            <div class="field-label">ESCOLHA SUA ESPÉCIE</div>
+            <div class="species-tabs"><button class="species-tab selected" data-species="hedgehog"><span>♟</span> HEDGEHOG</button><button class="species-tab" data-species="badnik"><span>◈</span> BADNIK</button></div>
+            <div class="custom-group" id="hedgehog-options">
+              <div class="option-row"><div><b>Cor dos espinhos</b><small>Focinho permanece natural</small></div><div class="swatches" id="fur-swatches"><button class="swatch active" data-color="#178cff" style="--swatch:#178cff" aria-label="Azul"></button><button class="swatch" data-color="#ee4167" style="--swatch:#ee4167" aria-label="Rosa"></button><button class="swatch" data-color="#9a65ff" style="--swatch:#9a65ff" aria-label="Roxo"></button><button class="swatch" data-color="#ff9d36" style="--swatch:#ff9d36" aria-label="Laranja"></button><button class="swatch" data-color="#42c980" style="--swatch:#42c980" aria-label="Verde"></button></div></div>
+              <div class="option-row"><div><b>Equipamento</b><small>Seu estilo de aventura</small></div><select id="gear-select"><option value="classic">Clássico</option><option value="trail">Explorador</option><option value="neon">Neon urbano</option></select></div>
+              <div class="option-row"><div><b>Expressão</b><small>Mostre sua atitude</small></div><select id="face-select"><option value="confident">Confiante</option><option value="fierce">Determinado</option><option value="happy">Animado</option></select></div>
+              <div class="option-row"><div><b>Máscara</b><small>Visual personalizável</small></div><label class="toggle"><input id="mask-toggle" type="checkbox"><span></span></label></div>
+            </div>
+            <div class="custom-group hidden" id="badnik-options"><div class="option-row"><div><b>Modelo Badnik</b><small>Robô de combate Eggman</small></div><select id="badnik-select"><option value="crab">Crabmeat</option><option value="buzz">Buzz Bomber</option><option value="motobug">Motobug</option></select></div><div class="option-row"><div><b>Revestimento</b><small>Recoloração do modelo</small></div><div class="swatches" id="bot-swatches"><button class="swatch active" data-color="#e85554" style="--swatch:#e85554"></button><button class="swatch" data-color="#ffbd3c" style="--swatch:#ffbd3c"></button><button class="swatch" data-color="#8d74f6" style="--swatch:#8d74f6"></button><button class="swatch" data-color="#44cdb0" style="--swatch:#44cdb0"></button></div></div></div>
+            <div class="creator-footer"><span><i class="live-dot"></i> PRONTO PARA EXPLORAR</span><button class="primary-btn small" id="create-btn">CONFIRMAR HERÓI <b>↗</b></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen map-screen hidden" id="map-screen">
+      <div class="panel map-panel"><div class="panel-head"><div><div class="eyebrow"><span class="eyebrow-line"></span> SELECIONE SEU DESTINO</div><h2>UM MUNDO <em>CAÓTICO</em></h2></div><button class="close-btn" id="map-back">×</button></div>
+        <div class="region-grid">
+          <button class="region-card forest-card active" data-region="forest"><span class="region-index">01 / BIOMA</span><span class="region-icon">♧</span><span class="region-title">FLORESTA<br><em>ESMERALDA</em></span><span class="region-desc">Ruínas antigas, trilhas selvagens e vida por toda parte.</span><span class="region-meta">● EXPLORAÇÃO &nbsp; ◆ 4 AMEAÇAS</span><span class="region-arrow">↗</span></button>
+          <button class="region-card city-card" data-region="city"><span class="region-index">02 / BIOMA</span><span class="region-icon">▥</span><span class="region-title">NEON<br><em>METROPOLIS</em></span><span class="region-desc">Uma cidade vertical. Ruas movimentadas e perigos à espreita.</span><span class="region-meta">● URBANO &nbsp; ◆ 5 AMEAÇAS</span><span class="region-arrow">↗</span></button>
+          <button class="region-card base-card" data-region="base"><span class="region-index">03 / BIOMA</span><span class="region-icon">⚙</span><span class="region-title">EGGMAN<br><em>INDUSTRIES</em></span><span class="region-desc">O coração mecânico do império. Segurança máxima.</span><span class="region-meta">● INDUSTRIAL &nbsp; ◆ 6 AMEAÇAS</span><span class="region-arrow">↗</span></button>
+        </div><div class="map-footer"><span><b>OBJETIVO PRINCIPAL</b> &nbsp; Interrompa a operação dos Badniks</span><button class="primary-btn small" id="enter-world-btn">ENTRAR NA REGIÃO <b>↗</b></button></div>
+      </div>
+    </section>
+
+    <section class="screen pause-screen hidden" id="pause-screen"><div class="panel pause-panel"><div class="eyebrow"><span class="eyebrow-line"></span> PAUSA</div><h2>RESPIRA.<br><em>RECARREGA.</em></h2><p>A aventura espera por você.</p><button class="primary-btn" id="resume-btn">CONTINUAR <b>↗</b></button><button class="text-btn" id="change-region-btn">ESCOLHER OUTRA REGIÃO</button><div class="key-summary">WASD mover <span>•</span> Espaço pular <span>•</span> J atacar</div></div></section>
+
+    <section class="screen gameover-screen hidden" id="gameover-screen"><div class="panel gameover-panel"><div class="eyebrow"><span class="eyebrow-line"></span> FIM DE JOGO</div><h2>AINDA NÃO<br><em>ACABOU.</em></h2><p>Os heróis sempre encontram um jeito de voltar.</p><button class="primary-btn" id="retry-btn">TENTAR DE NOVO <b>↗</b></button></div></section>
+
+    <div class="hud hidden" id="hud">
+      <div class="hud-left"><div class="player-chip"><div class="avatar-mark">✦</div><div><span id="hud-player-name">HEDGEHOG</span><small>NÍVEL <b id="level-number">01</b></small></div></div><div class="status-bars"><div class="bar-row"><span>HP</span><div class="bar-track"><div class="bar-fill health-fill" id="health-fill"></div></div><b id="health-text">100 / 100</b></div><div class="bar-row"><span>CAOS</span><div class="bar-track"><div class="bar-fill chaos-fill" id="chaos-fill"></div></div><b id="chaos-text">0%</b></div></div></div>
+      <div class="hud-objective"><span class="objective-symbol">◆</span><div><small>MISSÃO ATUAL</small><b id="objective-text">DERROTE OS BADNIKS</b></div></div>
+      <div class="hud-right"><div class="ring-counter"><span class="ring-icon">◎</span><div><b id="ring-count">000</b><small>ANÉIS</small></div></div><button class="hud-map-btn" id="hud-map-btn" title="Mapa">⌖</button></div>
+      <div class="boss-hud hidden" id="boss-hud"><div class="boss-title"><span>⚠</span><b>EGG HAMMER TITAN</b><small>FASE <span id="boss-phase">01</span></small></div><div class="boss-track"><div id="boss-fill"></div></div><div class="boss-hint" id="boss-hint">ATAQUE QUANDO O NÚCLEO ESTIVER EXPOSTO</div></div>
+      <div class="controls-hint"><span>W A S D</span> MOVER <i></i><span>ESPAÇO</span> PULAR <i></i><span>J</span> ATACAR <i></i><span>SHIFT</span> BOOST <i></i><span>Q / E</span> TRANSFORMAR</div>
+      <div class="power-buttons"><button id="super-btn" class="power-btn"><span>✦</span><b>SUPER</b><small>Q</small></button><button id="hyper-btn" class="power-btn hyper"><span>ϟ</span><b>HYPER</b><small>E</small></button></div>
+      <div class="touch-controls"><div class="touch-pad"><button data-move="forward">▲</button><div><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div></div><div class="touch-actions"><button data-action="jump">JUMP</button><button data-action="attack">HIT</button><button data-action="boost">BOOST</button></div></div>
+      <div class="toast hidden" id="toast"></div>
+    </div>
+    <div class="region-toast hidden" id="region-toast"><span class="live-dot"></span><div><small>REGIÃO DESCOBERTA</small><b id="region-toast-name">FLORESTA ESMERALDA</b></div></div>
+    <div class="interaction-prompt hidden" id="interaction-prompt"><span>E</span> ENTRAR NA ARENA</div>
+    <div class="loading-overlay hidden" id="loading-overlay"><div class="loader-mark">C</div><span>GERANDO REGIÃO...</span><div class="loader-track"><i></i></div></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
